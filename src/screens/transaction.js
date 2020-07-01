@@ -11,6 +11,7 @@ import {
   } from 'react-native';
 
 import book from '../assets/a.jpg'
+import b from '../assets/b.jpg'
 import BotNav from './botNavbar'
 
 const deviceWidth = Dimensions.get('window').width;
@@ -20,15 +21,32 @@ export default class Trans extends Component {
     return (
         <LinearGradient colors={['#0984e3','#74b9ff']} style={styles.parent}>
           <View style={styles.topWrapper}>
-            <Text style={styles.page}>Your books list</Text>
+            <Text style={styles.page}>Your Books</Text>
           </View>
           <View style={styles.listWrapper}>
             <View style={styles.itemWrapper}>
-              <Image source={book} style={styles.image}/>
-              <View>
-                <Text> I want to eat Your pancreas</Text>
-                <Text>Borrowed 12-10-2020</Text>
+              <View style={styles.imgWrapper}>
+                <Image source={book} style={styles.image}/>
               </View>
+              <View style={styles.detail}>
+                <Text style={styles.title}> I want to eat Your pancreas</Text>
+                <Text style={styles.date}>Borrowed by Tinky</Text>
+              </View>
+              <TouchableOpacity style={styles.btnReturn}>
+                <Text style={styles.return}>Return</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.itemWrapper}>
+              <View style={styles.imgWrapper}>
+                <Image source={b} style={styles.image}/>
+              </View>
+              <View style={styles.detail}>
+                <Text style={styles.title}>Very Nice</Text>
+                <Text style={styles.date}>Borrowed by Tinky</Text>
+              </View>
+              <TouchableOpacity style={styles.btnReturn}>
+                <Text style={styles.return}>Return</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <BotNav/>
@@ -53,26 +71,45 @@ const styles = StyleSheet.create({
   },
   itemWrapper:{
     flexDirection: 'row',
-    height: 130,
     borderRadius: 15,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    margin: 30,
-    padding: 10
+    backgroundColor: '#fff',
+    margin: 20,
+    elevation: 5,
   },
   imgWrapper:{
-    shadowColor: "#000",
+    marginLeft: 10,
+    top: -20,
+    width: 70,
+    height: 100,
     elevation: 5,
-    borderRadius: 15,
+    borderRadius: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   image: {
-    top: -60,
-    borderRadius: 15,
-    width: 100,
-    height: 200,
-    resizeMode: 'contain',
+    flex:1,
+    height: undefined,
+    width: undefined,
+    borderRadius: 5,
+    resizeMode: 'cover',
     marginRight: 5
   },
+  detail: {
+    padding: 5,
+    width: 170,
+  },
   title: {
-    fontSize: 30
+    color: '#0984e3',
+    marginBottom: 5,
+    fontWeight: 'bold'
+  },
+  date: {
+    color: '#74b9ff'
+  },
+  btnReturn:{
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  return: {
+    color: 'red'
   }
 })
