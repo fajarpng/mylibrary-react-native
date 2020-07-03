@@ -3,6 +3,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {
     StyleSheet,
     View,
+    ScrollView,
     TextInput,
     Dimensions,
     Text,
@@ -12,7 +13,6 @@ import {
 
 import book from '../assets/a.jpg'
 import b from '../assets/b.jpg'
-import BotNav from './botNavbar'
 const deviceWidth = Dimensions.get('window').width;
 
 export default class Home extends Component {
@@ -28,31 +28,20 @@ export default class Home extends Component {
             </View>
           </View>
           <Text style={styles.listText}>Books List</Text>
-          <View style={styles.listWrapper}>
-            <TouchableOpacity style={styles.imgWrapper}>
-              <Image source={book} style={styles.image}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imgWrapper}>
-              <Image source={b} style={styles.image}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imgWrapper}>
-              <Image source={b} style={styles.image}/>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.listWrapper}>
-            <TouchableOpacity style={styles.imgWrapper}>
-              <Image source={b} style={styles.image}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imgWrapper}>
-              <Image source={book} style={styles.image}/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.imgWrapper}>
-              <Image source={b} style={styles.image}/>
-            </TouchableOpacity>
-          </View>
-          <BotNav/>
+          <ScrollView>
+            <View style={styles.listWrapper}>
+              <TouchableOpacity style={styles.imgWrapper} onPress={() => this.props.navigation.navigate('detail')}>
+                <Image source={book} style={styles.image}/>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.imgWrapper}>
+                <Image source={b} style={styles.image}/>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.imgWrapper}>
+                <Image source={b} style={styles.image}/>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </LinearGradient>
-
     )
   }
 }
@@ -87,12 +76,13 @@ const styles = StyleSheet.create({
   listText: {
     marginTop: 40,
     marginLeft: 10,
+    marginBottom: 20,
     color:'#fff',
     fontSize: 20,
     fontWeight: 'bold'
   },
   listWrapper: {
-    marginTop: 20,
+    marginBottom: 20,
     paddingLeft: 20,
     paddingRight: 20,
     flexDirection: 'row',

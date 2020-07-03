@@ -29,7 +29,7 @@ export default class Register extends Component {
             </View>
             <View style={styles.linkWraper}>
               <Text >Have an account ?</Text>
-              <Text style={styles.title}> Login now</Text>
+              <Text style={styles.title} onPress={() => this.props.navigation.navigate('login')}> Login now</Text>
             </View>
     </View>
     )
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     alignItems: 'center',
+    backgroundColor: '#fff',
     justifyContent: 'center',
   },
   text: {

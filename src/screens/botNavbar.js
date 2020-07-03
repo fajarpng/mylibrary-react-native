@@ -1,73 +1,66 @@
-import React, {Component} from 'react'
-import {
-    StyleSheet,
-    View,
-    Dimensions,
-    Text,
-    Image,
-    TouchableOpacity
-  } from 'react-native';
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-import home from '../assets/home.png'
-import auth from '../assets/author.png'
-import trans from '../assets/trans.png'
-import gen from '../assets/gen.png'
+import Home from './home'
+import Trans from './transaction'
+import Profile from './profile'
+import Author from './admin/authors'
+import Genre from './admin/genre'
 
-const deviceWidth = Dimensions.get('window').width;
+const Tab = createBottomTabNavigator();
 
-export default class Nav extends Component {
-	render(){
-		return(
-			<View style={styles.botWrapper}>
-				<TouchableOpacity  style={styles.listWrapper}>
-					<Image source={home} style={styles.image}/>
-	         		<Text style={styles.text}>Home</Text>
-				</TouchableOpacity>
-				<TouchableOpacity  style={styles.listWrapper}>
-					<Image source={auth} style={styles.image}/>
-	         		<Text style={styles.text}>Author</Text>
-				</TouchableOpacity>
-				<TouchableOpacity  style={styles.listWrapper}>
-					<Image source={gen} style={styles.image}/>
-	         		<Text style={styles.text}>Genre</Text>
-				</TouchableOpacity>
-				<TouchableOpacity  style={styles.listWrapper}>
-					<Image source={trans} style={styles.image}/>
-	         		<Text style={styles.text}>Transaction</Text>
-				</TouchableOpacity>
-         	</View>
-		)
-	}
+export default function MyTabs() {
+  return (
+    <Tab.Navigator
+    tabBarOptions = {{
+    	activeTintColor: '#74b9ff',}
+    }>
+      <Tab.Screen
+       options={{
+            title: 'Home',
+            tabBarIcon: ({color, size}) => (
+              <Icon name="home" solid color={color} size={size} />
+            ),
+         }} 
+        name="home" 
+        component={Home} />
+      <Tab.Screen
+      	options={{
+            title: 'Author',
+            tabBarIcon: ({color, size}) => (
+              <Icon name="feather-alt" solid color={color} size={size} />
+            ),
+         }} 
+      	name="author"
+      	component={Author} />
+      <Tab.Screen
+        options={{
+            title: 'Profile',
+            tabBarIcon: ({color, size}) => (
+              <Icon name="user" solid color={color} size={size} />
+            ),
+         }} 
+        name="profile"
+        component={Profile} />
+      <Tab.Screen
+        options={{
+            title: 'Genre',
+            tabBarIcon: ({color, size}) => (
+              <Icon name="tag" solid color={color} size={size} />
+            ),
+         }} 
+        name="genre"
+        component={Genre} />
+      	<Tab.Screen
+      	options={{
+            title: 'Transaction',
+            tabBarIcon: ({color, size}) => (
+              <Icon name="list" solid color={color} size={size} />
+            ),
+         }} 
+      	name="tras"
+      	component={Trans} />
+    </Tab.Navigator>
+  );
 }
-
-const styles = StyleSheet.create({
-	image: {
-		width: 30,
-		height: 30,
-    	resizeMode: 'contain'
-	},
-	text: {
-		color: '#929292'
-	},
-	listWrapper: {
-		alignItems: 'center',
-		width: 80,
-	},
-	botWrapper:{
-		flexDirection: 'row',
-    	justifyContent: 'space-between',
-		paddingLeft: 10,
-		paddingRight: 10,
-		paddingBottom: 5,
-		paddingTop: 5,
-		alignItems: 'center',
-	    shadowColor: "#000",
-	    shadowOpacity: 0.5,
-	    elevation: 5,
-	    width: deviceWidth,
-	    height: 60,
-	    backgroundColor: '#fff',
-	    bottom: 0,
-	    position: 'absolute'
-	  }
-})

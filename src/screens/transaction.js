@@ -3,6 +3,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {
     StyleSheet,
     View,
+    ScrollView,
     TextInput,
     Dimensions,
     Text,
@@ -12,7 +13,6 @@ import {
 
 import book from '../assets/a.jpg'
 import b from '../assets/b.jpg'
-import BotNav from './botNavbar'
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -23,7 +23,7 @@ export default class Trans extends Component {
           <View style={styles.topWrapper}>
             <Text style={styles.page}>Your Books</Text>
           </View>
-          <View style={styles.listWrapper}>
+          <ScrollView style={styles.listWrapper}>
             <View style={styles.itemWrapper}>
               <View style={styles.imgWrapper}>
                 <Image source={book} style={styles.image}/>
@@ -48,8 +48,7 @@ export default class Trans extends Component {
                 <Text style={styles.return}>Return</Text>
               </TouchableOpacity>
             </View>
-          </View>
-          <BotNav/>
+          </ScrollView>
         </LinearGradient>
     )
   }
@@ -63,9 +62,10 @@ const styles = StyleSheet.create({
   topWrapper: {
     width: deviceWidth,
     height: 100,
-    padding: 20
+    padding: 20,
   },
   page: {
+    paddingTop: 10,
     color: '#fff',
     fontSize: 20,
   },

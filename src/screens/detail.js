@@ -16,23 +16,22 @@ const deviceWidth = Dimensions.get('window').width;
 export default class Landing extends Component {
   render (){
     return (
-      <View  style={styles.parent}>
+      <View style={styles.parent}>
         <LinearGradient colors={['#0984e3','#74b9ff']} style={styles.top}>
-          <Text style={styles.title}>Detail</Text>
-        </LinearGradient>
-        <View style={styles.detailWrapper}>
-          <View style={styles.imgWrapper}>
-            <Image source={book} style={styles.image}/>
-          </View>
-          <View style={styles.detail}>
-            <View>
-              <Text style={styles.detailTitle}>Very Nice</Text>
-              <Text style={styles.author}>Romance</Text>
-              <Text style={styles.author}>By Marey Dermansky</Text>
+          <View style={styles.detailWrapper}>
+            <View style={styles.imgWrapper}>
+              <Image source={book} style={styles.image}/>
             </View>
-            <TouchableOpacity style={styles.btn}><Text style={styles.text}>Borrow</Text></TouchableOpacity>
+            <View style={styles.detail}>
+              <View>
+                <Text style={styles.detailTitle}>Very Nice</Text>
+                <Text style={styles.author}>Romance</Text>
+                <Text style={styles.author}>By Marey Dermansky</Text>
+              </View>
+              <TouchableOpacity style={styles.btn}><Text style={styles.text}>Borrow</Text></TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </LinearGradient>
         <View style={styles.synopsis}>
           <Text> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
         </View>
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
   },
   top: {
     paddingTop: 30,
-    paddingLeft: 30,
     width: deviceWidth,
     height: 300,
   },
@@ -59,7 +57,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   detailWrapper: {
-    top: -180,
+    top: 80,
+    marginLeft: 10,
     width: deviceWidth,
     justifyContent:'center',
     alignItems: 'center',
@@ -112,7 +111,6 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   synopsis: {
-    top: -180,
     marginTop: 20,
     padding: 10,
     width: deviceWidth,

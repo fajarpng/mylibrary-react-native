@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import LinearGradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux'
+import { logout } from '../redux/actions/auth'
 import {
     StyleSheet,
     View,
@@ -13,7 +15,10 @@ import logo from '../assets/logo-b.png'
 
 const deviceWidth = Dimensions.get('window').width;
 
-export default class Landing extends Component {
+class Profile extends Component {
+  logout = () => {
+    this.props.logout()
+  }
   render (){
     return (
       <View  style={styles.parent}>
@@ -28,12 +33,17 @@ export default class Landing extends Component {
               <Text style={styles.profileText}>Email</Text>
               <Text style={styles.profileSubText}>tinky@mail.com</Text>
             </View>
-            <TouchableOpacity style={styles.btn}><Text style={styles.text}>LOGOUT</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={this.logout}><Text style={styles.text}>LOGOUT</Text></TouchableOpacity>
         </View>
       </View>
     )
   }
 }
+const mapStateToProps = state => ({
+    auth: state.auth,
+})
+const mapDispatchToProps = { logout }
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)
 
 const styles = StyleSheet.create({
   parent: {

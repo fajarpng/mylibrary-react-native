@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from './src/redux/store'
 
-import Landing from './src/screens/landing';
-import Login from './src/screens/login'
-import Register from './src/screens/register'
-import Home from './src/screens/home'
-import Trans from './src/screens/transaction'
-import Profile from './src/screens/profile'
-import Detail from './src/screens/detail'
+import Router from './src/router/router';
 
 export default class App extends Component {
   render() {
     return (
-      <>
-        <Home/>
-      </>
-    )
+    <Provider store={store}>
+	    <PersistGate persistor={persistor}>
+	        <Router/>
+    	</PersistGate>
+      </Provider>
+    );
   }
 }

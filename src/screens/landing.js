@@ -20,8 +20,12 @@ export default class Landing extends Component {
         	<Image source={logo} style={styles.image}/>
             <Text style={styles.title}>Hi ! Welcome to MyLibrary</Text>
             <View style={styles.btnWrapper}>
-                <TouchableOpacity style={styles.btn}><Text style={styles.text}>LOGIN</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.btn}><Text style={styles.text}>REGISTER</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('login')}>
+                  <Text style={styles.text}>LOGIN</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={() => this.props.navigation.navigate('register')}>
+                  <Text style={styles.text}>REGISTER</Text>
+                </TouchableOpacity>
             </View>
         </LinearGradient>
     )

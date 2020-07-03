@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux'
+import { login, clear } from '../redux/actions/auth'
 import {
     StyleSheet,
     View,
     TextInput,
     Dimensions,
+    Alert,
     Text,
     Image,
     TouchableOpacity
@@ -13,7 +16,30 @@ import logo from '../assets/logo-b.png'
 
 const deviceWidth = Dimensions.get('window').width;
 
-export default class Login extends Component {
+class Login extends Component {
+  constructor(props){
+        super(props)
+        this.state = {
+            email: 'tinky@mail.com',
+            password:'123'
+        }
+  }
+
+  login = () => {
+    console.log(this.state)
+    // this.props.login(this.state)
+  }
+  componentDidUpdate(){
+      const {msg, isError} = this.props.auth
+      if(msg !== ''){
+          if(isError){
+               Alert.alert("Alert Title")
+          } else {
+               Alert.alert("Success")
+          }
+      this.props.clear()
+      }
+  }
   render (){
     return (
         <View style={styles.parent}>
@@ -21,19 +47,25 @@ export default class Login extends Component {
             <Text style={styles.title}>Hi ! Log in to your account</Text>
             <View style={styles.btnWrapper}>
               <View style={styles.inputWraper}>
-                <TextInput placeholder='Email' style={styles.input}/>
-                <TextInput placeholder='Password' style={styles.input} />
+                <TextInput placeholder='Email' style={styles.input} onChangeText={(e) => this.setState({email: e})}/>
+                <TextInput placeholder='Password' style={styles.input} onChangeText={(e) => this.setState({password: e})}/>
               </View>
-                <TouchableOpacity style={styles.btn}><Text style={styles.text}>LOGIN</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress={this.login} ><Text style={styles.text}>LOGIN</Text></TouchableOpacity>
             </View>
             <View style={styles.linkWraper}>
               <Text >Don t have an account ?</Text>
-              <Text style={styles.title}> Register now</Text>
+              <Text style={styles.title} onPress={() => this.props.navigation.navigate('register')}> Register now</Text>
             </View>
     </View>
     )
   }
 }
+const mapStateToProps = state => ({
+    auth: state.auth,
+})
+const mapDispatchToProps = { login, clear }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
 
 const styles = StyleSheet.create({
   parent: {
@@ -41,6 +73,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#fff'
   },
   text: {
     color: '#fff',
