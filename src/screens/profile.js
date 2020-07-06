@@ -20,9 +20,14 @@ class Profile extends Component {
     this.props.logout()
   }
   render (){
+    // const {token} = this.props.auth
+    // const decoded = jwt.decode(token)
+    // console.log('aaaaaaaaaaaaaaaaaaaaaaa')
+    // console.log(decoded)
+    // console.log('aaaaaaaaaaaaaaaaaaaaaaa')
     return (
       <View  style={styles.parent}>
-        <LinearGradient colors={['#0984e3','#74b9ff']} style={styles.top}>
+        <LinearGradient colors={['#380036','#0CBABA']} style={styles.top}>
           <Text style={styles.title}>Profile View</Text>
           
         </LinearGradient>
@@ -59,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: '#74b9ff',
+    color: '#0CBABA',
     fontSize: 20,
     marginBottom: 50
   },
@@ -83,12 +88,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   profileText:{
-    color: '#74b9ff',
+    color: '#0CBABA',
     fontSize: 15,
     marginBottom: 1
   },
   profileSubText:{
-    color: '#0984e3',
+    color: '#380036',
     fontSize: 20,
     margin: 10
   },

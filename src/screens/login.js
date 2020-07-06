@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
+import qs from 'querystring'
 import { connect } from 'react-redux'
+import axios from 'axios'
 import { login, clear } from '../redux/actions/auth'
 import {
     StyleSheet,
@@ -20,20 +22,20 @@ class Login extends Component {
   constructor(props){
         super(props)
         this.state = {
-            email: 'tinky@mail.com',
-            password:'123'
+            email: '',
+            password:''
         }
   }
 
   login = () => {
     console.log(this.state)
-    // this.props.login(this.state)
+    this.props.login(this.state)
   }
   componentDidUpdate(){
       const {msg, isError} = this.props.auth
       if(msg !== ''){
           if(isError){
-               Alert.alert("Alert Title")
+               Alert.alert("Failed")
           } else {
                Alert.alert("Success")
           }
@@ -47,8 +49,13 @@ class Login extends Component {
             <Text style={styles.title}>Hi ! Log in to your account</Text>
             <View style={styles.btnWrapper}>
               <View style={styles.inputWraper}>
-                <TextInput placeholder='Email' style={styles.input} onChangeText={(e) => this.setState({email: e})}/>
-                <TextInput placeholder='Password' style={styles.input} onChangeText={(e) => this.setState({password: e})}/>
+                <TextInput
+                  placeholder='Email'
+                  style={styles.input} onChangeText={(e) => this.setState({email: e})}/>
+                <TextInput
+                  placeholder='Password'
+                  secureTextEntry={true}
+                  style={styles.input} onChangeText={(e) => this.setState({password: e})}/>
               </View>
                 <TouchableOpacity style={styles.btn} onPress={this.login} ><Text style={styles.text}>LOGIN</Text></TouchableOpacity>
             </View>
@@ -86,18 +93,15 @@ const styles = StyleSheet.create({
     paddingBottom: 50
   },
   btn: {
-    shadowColor: "#000",
-    shadowOpacity: 0.5,
-    shadowRadius: 3.84,
     elevation: 5,
     alignItems: 'center',
-    backgroundColor: '#0984e3',
+    backgroundColor: '#0CBABA',
     width: 250,
     borderRadius: 15,
     padding: 5
   },
   title: {
-    color: '#0984e3',
+    color: '#0CBABA',
     marginBottom: 20,
   },
   linkWraper: {
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     borderBottomWidth: 2,
-    borderBottomColor: '#0984e3',
+    borderBottomColor: '#0CBABA',
     marginBottom: 10
   },
   image: {

@@ -14,7 +14,7 @@ import Tab from '../screens/botNavbar'
 class Route extends Component {
   render() {
   	let isLogin
-  	if(this.props.auth.token === null){
+  	if(this.props.auth.token !== null){
   		isLogin = true
   	}else{isLogin = false}
     return (
@@ -30,7 +30,7 @@ class Route extends Component {
 				            backgroundColor: '#fff',
 				            elevation: 0
 				          },
-				          headerTintColor: '#0984e3',
+				          headerTintColor: '#0CBABA',
 				          headerTitleStyle: {
 				            fontWeight: 'bold',
 				          },
@@ -44,7 +44,7 @@ class Route extends Component {
 				            backgroundColor: '#fff',
 				            elevation: 0
 				          },
-				          headerTintColor: '#0984e3',
+				          headerTintColor: '#0CBABA',
 				          headerTitleStyle: {
 				            fontWeight: 'bold',
 				          },
@@ -58,13 +58,10 @@ class Route extends Component {
 		        		options={{
 				          title: 'Detail',
 				          headerStyle: {
-				            backgroundColor: '#0984e3',
+				            backgroundColor: '#380036',
 				            elevation: 0
 				          },
 				          headerTintColor: '#fff',
-				          headerTitleStyle: {
-				            fontWeight: 'bold',
-				          },
 				        }}
 		        		component={Detail}
 		        		name={'detail'}/> 

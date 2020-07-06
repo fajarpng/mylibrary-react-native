@@ -17,7 +17,7 @@ export default class Landing extends Component {
   render (){
     return (
       <View style={styles.parent}>
-        <LinearGradient colors={['#0984e3','#74b9ff']} style={styles.top}>
+        <LinearGradient colors={['#380036','#0CBABA']} style={styles.top}>
           <View style={styles.detailWrapper}>
             <View style={styles.imgWrapper}>
               <Image source={book} style={styles.image}/>

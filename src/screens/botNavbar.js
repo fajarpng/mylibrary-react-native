@@ -14,7 +14,7 @@ export default function MyTabs() {
   return (
     <Tab.Navigator
     tabBarOptions = {{
-    	activeTintColor: '#74b9ff',}
+    	activeTintColor: '#0CBABA',}
     }>
       <Tab.Screen
        options={{
@@ -36,15 +36,6 @@ export default function MyTabs() {
       	component={Author} />
       <Tab.Screen
         options={{
-            title: 'Profile',
-            tabBarIcon: ({color, size}) => (
-              <Icon name="user" solid color={color} size={size} />
-            ),
-         }} 
-        name="profile"
-        component={Profile} />
-      <Tab.Screen
-        options={{
             title: 'Genre',
             tabBarIcon: ({color, size}) => (
               <Icon name="tag" solid color={color} size={size} />
@@ -52,7 +43,7 @@ export default function MyTabs() {
          }} 
         name="genre"
         component={Genre} />
-      	<Tab.Screen
+      <Tab.Screen
       	options={{
             title: 'Transaction',
             tabBarIcon: ({color, size}) => (
@@ -61,6 +52,15 @@ export default function MyTabs() {
          }} 
       	name="tras"
       	component={Trans} />
+      <Tab.Screen
+        options={{
+            title: 'Profile',
+            tabBarIcon: ({color, size}) => (
+              <Icon name="user" solid color={color} size={size} />
+            ),
+         }} 
+        name="profile"
+        component={Profile} />
     </Tab.Navigator>
   );
 }

@@ -16,7 +16,7 @@ const deviceWidth = Dimensions.get('window').width;
 export default class Landing extends Component {
   render (){
     return (
-        <LinearGradient colors={['#0984e3','#74b9ff']} style={styles.parent}>
+        <LinearGradient colors={['#380036','#0CBABA']} style={styles.parent}>
         	<Image source={logo} style={styles.image}/>
             <Text style={styles.title}>Hi ! Welcome to MyLibrary</Text>
             <View style={styles.btnWrapper}>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: '#74b9ff',
+    color: '#0CBABA',
     fontSize: 20,
   },
   btnWrapper: {

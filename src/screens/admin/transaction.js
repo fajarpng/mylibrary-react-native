@@ -8,13 +8,12 @@ import {
     ScrollView,
     TextInput,
     Dimensions,
-    FlatList,
     Text,
     Image,
     TouchableOpacity
   } from 'react-native';
 
-import {fetchTrans} from '../redux/actions/fetchData'
+import { fetchTrans } from '../redux/actions/fetchData'
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -23,50 +22,36 @@ class Trans extends Component {
     this.props.fetchTrans()
   }
   render (){
-    const { trans, isLoading} = this.props.fetchData
+    // const { trans, isLoading} = this.props.fetchData
     return (
         <LinearGradient colors={['#380036','#0CBABA']} style={styles.parent}>
           <View style={styles.topWrapper}>
             <Text style={styles.page}>Your Books</Text>
           </View>
-            <FlatList
-              data={trans}
-              renderItem={({item}) => (
-                <Item
-                  title={item.title}
-                  name={item.name}
-                  cover={{uri : item.image}}
-                />
-              )}
-              keyExtractor={item => item.title}
-              // onRefresh={() => this.getData({page: currentPage})}
-              refreshing={isLoading}
-              // onEndReached={this.nextPage}
-              onEndReachedThreshold={0.5}
-            />
+            
         </LinearGradient>
     )
   }
 }
-class Item extends Component {
-  render() {
-    return (
-       <View style={styles.itemWrapper}>
-        <View style={styles.imgWrapper}>
-          <Image source={this.props.cover} style={styles.image}/>
-        </View>
-        <View style={styles.detail}>
-          <Text style={styles.title}>{this.props.title}</Text>
-          <Text style={styles.date}>Borrowed by {this.props.name}</Text>
-        </View>
-        <TouchableOpacity style={styles.btnReturn}>
-          <Icon name='undo-alt' color='red' size={20}/>
-          <Text style={styles.return}>Return</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-}
+// class Item extends Component {
+//   render() {
+//     return (
+//        <View style={styles.itemWrapper}>
+//         <View style={styles.imgWrapper}>
+//           <Image source={this.props.cover} style={styles.image}/>
+//         </View>
+//         <View style={styles.detail}>
+//           <Text style={styles.title}>{this.props.title}</Text>
+//           <Text style={styles.date}>Borrowed by {this.props.name}</Text>
+//         </View>
+//         <TouchableOpacity style={styles.btnReturn}>
+//           <Icon name='undo-alt' color='red' size={20}/>
+//           <Text style={styles.return}>Return</Text>
+//         </TouchableOpacity>
+//       </View>
+//     )
+//   }
+// }
 
 const mapStateToProps = state => ({
     fetchData: state.fetchData,

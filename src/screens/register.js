@@ -23,7 +23,10 @@ export default class Register extends Component {
               <View style={styles.inputWraper}>
                 <TextInput placeholder='Username' style={styles.input}/>
                 <TextInput placeholder='Email' style={styles.input}/>
-                <TextInput placeholder='Password' style={styles.input} />
+                <TextInput
+                  placeholder='Password'
+                  secureTextEntry={true}
+                  style={styles.input} />
               </View>
                 <TouchableOpacity style={styles.btn}><Text style={styles.text}>REGISTER</Text></TouchableOpacity>
             </View>
@@ -60,13 +63,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     alignItems: 'center',
-    backgroundColor: '#0984e3',
+    backgroundColor: '#0CBABA',
     width: 250,
     borderRadius: 15,
     padding: 5
   },
   title: {
-    color: '#0984e3',
+    color: '#0CBABA',
     marginBottom: 20,
   },
   linkWraper: {
@@ -79,7 +82,7 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     borderBottomWidth: 2,
-    borderBottomColor: '#0984e3',
+    borderBottomColor: '#0CBABA',
     marginBottom: 10
   },
   image: {
