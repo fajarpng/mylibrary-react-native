@@ -104,8 +104,12 @@ const styles = StyleSheet.create({
   },
   btmWrapper: {
     top: -300,
-    width: deviceWidth,
+    width: deviceWidth-50,
     alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 5,
+    elevation: 5,
+    backgroundColor: '#fff'
   },
   title: {
     color: '#fff',
@@ -133,6 +137,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 20,
+    borderRadius: 5,
     width: deviceWidth - 50,
     backgroundColor: '#fff',
     elevation: 5,

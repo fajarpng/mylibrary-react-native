@@ -1,8 +1,8 @@
 import axios from '../../assets/helper/axios'
 const REACT_APP_URL = 'http://192.168.43.133:1000/'
 
-export const fetchBook = () =>{
-    const url = `${REACT_APP_URL}books`
+export const fetchBook = (param) =>{
+    const url = `${REACT_APP_URL}books/${param}`
   return {
     type: 'GET',
     payload: axios().get(url)

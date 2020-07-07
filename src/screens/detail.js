@@ -1,45 +1,87 @@
 import React, {Component} from 'react'
 import LinearGradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux'
 import {
     StyleSheet,
     View,
     Dimensions,
+    Alert,
     Text,
     Image,
     TouchableOpacity
   } from 'react-native';
 
-import book from '../assets/b.jpg'
+import {addTrans, clear} from '../redux/actions/actionData'
+import {fetchTrans, fetchBook} from '../redux/actions/fetchData'
 
 const deviceWidth = Dimensions.get('window').width;
 
-export default class Landing extends Component {
+class Detail extends Component {
+  componentDidUpdate(){
+      const {msg, isError} = this.props.actionData
+      const param = '?page=1'
+      if(msg !== ''){
+          if(isError){
+            Alert.alert(msg)
+          } else {
+            Alert.alert(msg)
+            this.props.fetchTrans()
+            this.props.fetchBook(param)
+            this.props.navigation.goBack()
+          }
+      this.props.clear()
+      }
+  }
+  borrowBook = () => {
+    const {id, token} = this.props.auth
+    const data = {
+      id_book: this.props.route.params.item.id, 
+      id_user: id
+    }
+    this.props.addTrans(data, token)
+  }
   render (){
+    const {title, author, genre, status, description, image} = this.props.route.params.item
+    
+    var isAvail
+    if(status === 'Not Available'){
+      isAvail = false
+    }else(isAvail = true)
     return (
       <View style={styles.parent}>
         <LinearGradient colors={['#380036','#0CBABA']} style={styles.top}>
           <View style={styles.detailWrapper}>
             <View style={styles.imgWrapper}>
-              <Image source={book} style={styles.image}/>
+              <Image source={{uri : image}} style={styles.image}/>
             </View>
             <View style={styles.detail}>
               <View>
-                <Text style={styles.detailTitle}>Very Nice</Text>
-                <Text style={styles.author}>Romance</Text>
-                <Text style={styles.author}>By Marey Dermansky</Text>
+                <Text style={styles.detailTitle}>{title}</Text>
+                <Text style={styles.author}>{genre}</Text>
+                <Text style={styles.author}>By {author}</Text>
               </View>
-              <TouchableOpacity style={styles.btn}><Text style={styles.text}>Borrow</Text></TouchableOpacity>
+              {isAvail && (
+                <TouchableOpacity style={styles.btn} onPress={this.borrowBook}>
+                  <Text style={styles.text}>Borrow</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </LinearGradient>
         <View style={styles.synopsis}>
-          <Text> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+          <Text> {description} </Text>
         </View>
       </View>
     )
   }
 }
-
+const mapStateToProps = state => ({
+    auth: state.auth,
+    actionData: state.actionData,
+    fetchData: state.fetchData,
+})
+const mapDispatchToProps = { fetchTrans, addTrans, clear, fetchBook }
+export default connect(mapStateToProps, mapDispatchToProps)(Detail)
 const styles = StyleSheet.create({
   parent: {
     flex: 1,

@@ -10,7 +10,6 @@ const initialState = {
         return {
           ...state,
           msg: '',
-          token: true
         }
       }
       case 'BOOK_PENDING': {

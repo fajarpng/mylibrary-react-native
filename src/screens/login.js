@@ -28,7 +28,6 @@ class Login extends Component {
   }
 
   login = () => {
-    console.log(this.state)
     this.props.login(this.state)
   }
   componentDidUpdate(){

@@ -20,9 +20,8 @@ class Profile extends Component {
     this.props.logout()
   }
   render (){
-    // const {token} = this.props.auth
+    const {name, email} = this.props.auth
     // const decoded = jwt.decode(token)
-    // console.log('aaaaaaaaaaaaaaaaaaaaaaa')
     // console.log(decoded)
     // console.log('aaaaaaaaaaaaaaaaaaaaaaa')
     return (
@@ -34,9 +33,9 @@ class Profile extends Component {
         <View style={styles.btnWrapper}>
             <View style={styles.profile}>
               <Text style={styles.profileText}>Username</Text>
-              <Text style={styles.profileSubText}>Tinky</Text>
+              <Text style={styles.profileSubText}>{name}</Text>
               <Text style={styles.profileText}>Email</Text>
-              <Text style={styles.profileSubText}>tinky@mail.com</Text>
+              <Text style={styles.profileSubText}>{email}</Text>
             </View>
             <TouchableOpacity style={styles.btn} onPress={this.logout}><Text style={styles.text}>LOGOUT</Text></TouchableOpacity>
         </View>

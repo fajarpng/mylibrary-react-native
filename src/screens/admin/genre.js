@@ -28,7 +28,7 @@ class Profile extends Component {
     return (
       <View style={styles.parent}>
         <LinearGradient colors={['#380036','#0CBABA']} style={styles.top}>
-          <Text style={styles.title}>List Authors</Text>
+          <Text style={styles.title}>List Genres</Text>
         </LinearGradient>
         <View style={styles.btmWrapper}>
           <FlatList
@@ -53,15 +53,9 @@ class Profile extends Component {
 class Item extends Component {
   render() {
     return (
-       <View>
-          <View style={styles.profile}>
-              <Text style={styles.authorText}>{this.props.title}</Text>
-              <View style={styles.row}>
-                <Icon name='trash' color='red' size={20}/>
-                <Icon name='pencil-alt' color='orange' size={20}/>
-              </View>
-          </View>
-       </View>
+      <View style={styles.profile}>
+          <Text style={styles.authorText}>{this.props.title}</Text>
+      </View>
     )
   }
 }
@@ -70,7 +64,10 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = { fetchGenre }
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
-
+// <View style={styles.row}>
+//   <Icon name='trash' color='red' size={20}/>
+//   <Icon name='pencil-alt' color='orange' size={20}/>
+// </View>
 const styles = StyleSheet.create({
   parent: {
     backgroundColor: '#fff',
@@ -95,8 +92,12 @@ const styles = StyleSheet.create({
   },
   btmWrapper: {
     top: -300,
-    width: deviceWidth,
+    width: deviceWidth-50,
     alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 5,
+    elevation: 5,
+    backgroundColor: '#fff'
   },
   title: {
     color: '#fff',
@@ -107,24 +108,12 @@ const styles = StyleSheet.create({
     color: '#380036',
     fontSize: 17,
   },
-  desc: {
-    color: '#fff',
-    fontSize: 15,
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  descWrapper: {
-    padding: 10,
-    backgroundColor: '#380036',
-    borderBottomStartRadius: 5,
-    width: deviceWidth - 50,
-    borderBottomEndRadius: 5,
-  },
   profile: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 20,
+    borderRadius: 5,
     width: deviceWidth - 50,
     backgroundColor: '#fff',
     elevation: 5,

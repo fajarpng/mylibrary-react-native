@@ -8,13 +8,15 @@ import {
     ScrollView,
     TextInput,
     Dimensions,
+    Alert,
     FlatList,
     Text,
     Image,
     TouchableOpacity
   } from 'react-native';
 
-import {fetchTrans} from '../redux/actions/fetchData'
+import {deleteTrans, clear} from '../redux/actions/actionData'
+import {fetchTrans, fetchBook} from '../redux/actions/fetchData'
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -22,56 +24,66 @@ class Trans extends Component {
   componentDidMount(){
     this.props.fetchTrans()
   }
+  componentDidUpdate(){
+      const {msg, isError} = this.props.actionData
+      const param = '?page=1'
+
+      if(msg !== ''){
+          if(isError){
+            Alert.alert(msg)
+          } else {
+            Alert.alert(msg)
+            this.props.fetchTrans()
+            this.props.fetchBook(param)
+          }
+      this.props.clear()
+      }
+  }
+  returnBook = (id) => {
+    this.props.deleteTrans(id,this.props.auth.token)
+  }
   render (){
+    const { name } = this.props.auth
     const { trans, isLoading} = this.props.fetchData
+    const data = trans.filter(val => { return val.name === name})
+
     return (
         <LinearGradient colors={['#380036','#0CBABA']} style={styles.parent}>
           <View style={styles.topWrapper}>
             <Text style={styles.page}>Your Books</Text>
           </View>
             <FlatList
-              data={trans}
+              data={data}
               renderItem={({item}) => (
-                <Item
-                  title={item.title}
-                  name={item.name}
-                  cover={{uri : item.image}}
-                />
+                <View style={styles.itemWrapper}>
+                  <View style={styles.imgWrapper}>
+                    <Image source={{uri: item.image}} style={styles.image}/>
+                  </View>
+                  <View style={styles.detail}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.date}>Borrowed by {item.name}</Text>
+                  </View>
+                  <TouchableOpacity style={styles.btnReturn} onPress={() => this.returnBook(item.id)}>
+                    <Icon name='undo-alt' color='red' size={20}/>
+                    <Text style={styles.return}>Return</Text>
+                  </TouchableOpacity>
+                </View>
               )}
               keyExtractor={item => item.title}
-              // onRefresh={() => this.getData({page: currentPage})}
               refreshing={isLoading}
-              // onEndReached={this.nextPage}
               onEndReachedThreshold={0.5}
             />
         </LinearGradient>
     )
   }
 }
-class Item extends Component {
-  render() {
-    return (
-       <View style={styles.itemWrapper}>
-        <View style={styles.imgWrapper}>
-          <Image source={this.props.cover} style={styles.image}/>
-        </View>
-        <View style={styles.detail}>
-          <Text style={styles.title}>{this.props.title}</Text>
-          <Text style={styles.date}>Borrowed by {this.props.name}</Text>
-        </View>
-        <TouchableOpacity style={styles.btnReturn}>
-          <Icon name='undo-alt' color='red' size={20}/>
-          <Text style={styles.return}>Return</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-}
 
 const mapStateToProps = state => ({
+    auth: state.auth,
+    actionData: state.actionData,
     fetchData: state.fetchData,
 })
-const mapDispatchToProps = { fetchTrans }
+const mapDispatchToProps = { fetchTrans, deleteTrans, clear, fetchBook }
 export default connect(mapStateToProps, mapDispatchToProps)(Trans)
 
 const styles = StyleSheet.create({

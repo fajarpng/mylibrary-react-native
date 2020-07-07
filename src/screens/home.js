@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios'
 import {
     StyleSheet,
@@ -23,71 +24,69 @@ class Home extends Component {
     super(props);
     this.state = {
       data: [],
-      isLoading: false,
       currentPage: 1,
+      search: ''
     };
   }
-  async componentDidMount() {
-    await this.getData();
-    this.props.fetchBook()
+  componentDidMount() {
+    this.getData();
   }
-  getData = async () => {
-    this.setState({isLoading: true});
-    const {data} = await axios.get(
-      'https://reqres.in/api/users?page='.concat(this.state.currentPage),
-    );
-    this.setState({data: [...this.state.data, ...data.data], isLoading: false});
-  };
+  getData = () => {
+    const {currentPage, search} = this.state
+    const param = `?page=${currentPage}&search=${search}`
+    const {books} = this.props.fetchData
+
+    this.props.fetchBook(param)
+    // this.setState({data: [...this.state.data, ...books]})
+  }
+  search = () => {
+    this.setState({currentPage: 1, data: []}, () => {
+      this.getData()
+    })
+  }
   nextPage = () => {
     this.setState({currentPage: this.state.currentPage + 1}, () => {
-      this.getData({page: this.state.currentPage});
-    });
-    // console.log('end of data');
-  };
+      this.getData()
+    })
+  }
   render() {
-    const {name} = this.props.auth
+    const { name } = this.props.auth
     const {books, isLoading} = this.props.fetchData
-    const {data, currentPage} = this.state;
+    const { data, currentPage } = this.state;
     return (
       <LinearGradient colors={['#380036','#0CBABA']} style={styles.parent}>
           <View style={styles.topWrapper}>
             <Text style={styles.hi}>Hi,</Text>
             <Text style={styles.name}>{name} !</Text>
             <View style={styles.inputWraper}>
-              <TextInput placeholder='Search book ...' style={styles.input} />
+              <TextInput placeholder='Search book ...'
+                style={styles.input}
+                onChangeText={(e) => this.setState({search: e})}/>
+              <Icon name='search' size={20} onPress={()=>this.search()}/>
             </View>
           </View>
           <Text style={styles.listText}>Books List</Text>
-          <FlatList
-            data={books}
-            renderItem={({item}) => (
-              <Item
-                title={item.title}
-                image={item.image}
-              />
-            )}
-            keyExtractor={item => item.title}
-            // onRefresh={() => this.getData({page: currentPage})}
-            refreshing={isLoading}
-            // onEndReached={this.nextPage}
-            onEndReachedThreshold={0.5}
-          />   
+            <FlatList
+              style={styles.listWrapper} 
+              data={books}
+              renderItem={({item}) => (
+                <TouchableOpacity style={styles.imgWrapper} 
+                  onPress={() => this.props.navigation.navigate('detail',{item})}>
+                  <Image source={{uri : item.image}} style={styles.image}/>
+                </TouchableOpacity>
+              )}
+              numColumns={3}
+              keyExtractor={item => item.image}
+              onRefresh={() => this.getData()}
+              refreshing={isLoading}
+              // onEndReached={this.nextPage}
+              onEndReachedThreshold={0.5}
+            />
       </LinearGradient>
     );
   }
 }
 
-class Item extends Component {
-  render (){
-    return (
-      <View style={styles.listWrapper}>
-        <TouchableOpacity style={styles.imgWrapper} onPress={() => this.props.navigation.navigate('detail')}>
-          <Image source={{uri : this.props.image}} style={styles.image}/>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-}
 const mapStateToProps = state => ({
     fetchData: state.fetchData,
     auth: state.auth,
@@ -114,12 +113,19 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold'
   },
-  input: {
+  inputWraper: {
+    width: deviceWidth - 50,
     marginTop: 30,
-    width: 300,
-    alignSelf: 'center',
     backgroundColor: '#fff',
+    alignItems: 'center',
+    alignSelf: 'center',
     borderRadius: 15,
+    paddingLeft: 10,
+    flexDirection: 'row'
+  },
+  input: {
+    width: deviceWidth - 100,
+    alignSelf: 'center',
     padding: 10
   },
   listText: {
@@ -131,15 +137,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   listWrapper: {
-    marginBottom: 20,
     paddingLeft: 20,
     paddingRight: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   imgWrapper:{
     width: 100,
     height: 150,
+    margin: 5,
     elevation: 5,
     borderRadius: 5,
     backgroundColor: 'rgba(255, 255, 255, 0)',

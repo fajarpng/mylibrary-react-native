@@ -3,6 +3,8 @@ const initialState = {
     msg: '',
     token: null,
     name: '',
+    email: '',
+    id:'',
     role: ''
   }
   
@@ -34,6 +36,8 @@ const initialState = {
           msg: action.payload.data.msg,
           token: action.payload.data.token,
           name: action.payload.data.name,
+          email: action.payload.data.email,
+          id: action.payload.data.id,
           role: action.payload.data.role
         }
       }
@@ -64,6 +68,8 @@ const initialState = {
           msg: '',
           token: null,
           name: '',
+          email: '',
+          id: '',
           role: ''
         }
       }
