@@ -29,3 +29,8 @@ export const fetchTrans = () =>{
     payload: axios().get(url)
   }
 }
+export const clear = () =>{
+  return {
+    type: 'CLEAR'
+  }
+}

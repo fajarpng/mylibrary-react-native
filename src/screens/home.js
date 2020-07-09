@@ -15,7 +15,7 @@ import {
     TouchableOpacity
   } from 'react-native';
 
-import {fetchBook} from '../redux/actions/fetchData'
+import {fetchBook, fetchGenre, clear} from '../redux/actions/fetchData'
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -25,33 +25,73 @@ class Home extends Component {
     this.state = {
       data: [],
       currentPage: 1,
-      search: ''
+      search: '',
+      genre: ''
     };
   }
   componentDidMount() {
-    this.getData();
+    this.getData(this.state.genre);
   }
-  getData = () => {
-    const {currentPage, search} = this.state
-    const param = `?page=${currentPage}&search=${search}`
-    const {books} = this.props.fetchData
+  getData = (genre) => {
+    const {currentPage, search, data} = this.state
+    const param = `?page=${currentPage}&search=${search}&id_genre=${genre}`
 
     this.props.fetchBook(param)
-    // this.setState({data: [...this.state.data, ...books]})
+  }
+  componentDidUpdate(){
+    const {isLoading, books, msg} = this.props.fetchData
+    if(msg === 'FULFILED'){
+      if (isLoading) {
+        console.log(msg)
+      } else {
+        this.setData()
+      }
+      this.props.clear()
+    }
+    ;
+  }
+  setData = () => {
+    const { books } = this.props.fetchData
+    const {currentPage, search} = this.state
+
+    if (currentPage > 1) {
+      console.log('NEXT PAGE')
+      console.log(books)
+      this.setState({data: [...this.state.data, ...books]})
+    } else {
+      console.log('FRIST PAGE')
+      console.log(books)
+      this.setState({data: [...books]})
+    }
+  }
+  onRefresh = () => {
+    this.setState({currentPage: 1, data: [], search: '', genre:''}),
+    this.props.fetchBook('?page=1')
   }
   search = () => {
     this.setState({currentPage: 1, data: []}, () => {
-      this.getData()
+      this.getData('')
     })
   }
   nextPage = () => {
-    this.setState({currentPage: this.state.currentPage + 1}, () => {
-      this.getData()
-    })
+    const {pageInfo} = this.props.fetchData
+    const {currentPage, genre} =this.state
+    console.log('AAAAAA NEXT PAGE AAAAAAAAA')
+    if ( pageInfo.nextLink !== null) {
+      if( (genre !== '') && ((currentPage + 1) !== pageInfo.totalPage)){
+        this.setState({currentPage: currentPage + 1}, () => {
+          this.getData(genre)
+        })
+      } else {
+        this.setState({currentPage: currentPage + 1}, () => {
+          this.getData(genre)
+        })
+      }
+    }
   }
   render() {
     const { name } = this.props.auth
-    const {books, isLoading} = this.props.fetchData
+    const {books, genres, isLoading} = this.props.fetchData
     const { data, currentPage } = this.state;
     return (
       <LinearGradient colors={['#380036','#0CBABA']} style={styles.parent}>
@@ -60,28 +100,51 @@ class Home extends Component {
             <Text style={styles.name}>{name} !</Text>
             <View style={styles.inputWraper}>
               <TextInput placeholder='Search book ...'
+                value={this.state.search}
                 style={styles.input}
                 onChangeText={(e) => this.setState({search: e})}/>
-              <Icon name='search' size={20} onPress={()=>this.search()}/>
+                <TouchableOpacity>
+                  <Icon name='search' color='#380036' size={20} onPress={()=>this.search()}/>
+                </TouchableOpacity>
             </View>
           </View>
           <Text style={styles.listText}>Books List</Text>
+          <View>
             <FlatList
-              style={styles.listWrapper} 
-              data={books}
+              style={styles.listGenre}
+              horizontal
+              data={genres}
               renderItem={({item}) => (
-                <TouchableOpacity style={styles.imgWrapper} 
-                  onPress={() => this.props.navigation.navigate('detail',{item})}>
-                  <Image source={{uri : item.image}} style={styles.image}/>
+                <TouchableOpacity
+                  style={styles.btnGenre}
+                  onPress={() => this.setState({genre: item.id},this.getData(item.id))}>
+                  <Text style={styles.textGenre}>{item.genre}</Text>
                 </TouchableOpacity>
               )}
-              numColumns={3}
-              keyExtractor={item => item.image}
-              onRefresh={() => this.getData()}
+              keyExtractor={item => item.genre}
               refreshing={isLoading}
-              // onEndReached={this.nextPage}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0.2}
             />
+          </View>
+          <FlatList
+            style={styles.listWrapper} 
+            data={books}
+            renderItem={({item}) => (
+              <View style={styles.bookWrapper}>
+              <TouchableOpacity style={styles.imgWrapper} 
+                onPress={() => this.props.navigation.navigate('detail',{item})}>
+                <Image source={{uri : item.image}} style={styles.image}/>
+              </TouchableOpacity>
+              <Text style={styles.titleText}> {item.title} </Text>
+              </View>
+            )}
+            numColumns={3}
+            keyExtractor={item => item.id.toString()}
+            onRefresh={this.onRefresh}
+            refreshing={isLoading}
+            onEndReached={this.nextPage}
+            onEndReachedThreshold={0.2}
+          />
       </LinearGradient>
     );
   }
@@ -91,7 +154,7 @@ const mapStateToProps = state => ({
     fetchData: state.fetchData,
     auth: state.auth,
 })
-const mapDispatchToProps = { fetchBook }
+const mapDispatchToProps = { fetchBook, fetchGenre, clear}
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
 
 const styles = StyleSheet.create({
@@ -129,16 +192,26 @@ const styles = StyleSheet.create({
     padding: 10
   },
   listText: {
-    marginTop: 40,
+    marginTop: 20,
     marginLeft: 10,
-    marginBottom: 20,
     color:'#fff',
     fontSize: 20,
     fontWeight: 'bold'
   },
   listWrapper: {
+    marginTop: 10,
     paddingLeft: 20,
     paddingRight: 20,
+  },
+  bookWrapper: {
+
+  },
+  titleText: {
+    width: 100,
+    marginBottom: 5,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#fff'
   },
   imgWrapper:{
     width: 100,
@@ -147,6 +220,24 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 5,
     backgroundColor: 'rgba(255, 255, 255, 0)',
+  },
+  listGenre: {
+    marginTop: 10,
+  },
+  btnGenre: {
+    marginLeft: 10,
+    backgroundColor: '#0CBABA',
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    elevation: 5,
+    borderRadius: 15,
+    justifyContent: 'center',
+  },
+  textGenre: {
+    color: '#fff',
+    fontSize: 17
   },
   image: {
     flex:1,

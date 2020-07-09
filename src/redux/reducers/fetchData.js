@@ -4,6 +4,7 @@ const initialState = {
     genres : [],
     trans : [],
     isLoading: true,
+    msg: '',
     pageInfo: ''
   }
   
@@ -12,12 +13,14 @@ const initialState = {
       case 'GET_PENDING': {
         return {
             ...state,
+            msg: 'PENDING',
             isLoading: true,
         }
       }
       case 'GET_FULFILLED': {
         return {
           ...state,
+          msg: 'PENDING',
           isLoading : false,
           books : action.payload.data.data,
           pageInfo : action.payload.data.pageInfo
@@ -54,6 +57,12 @@ const initialState = {
           ...state,
           isLoading : false,
           trans : action.payload.data.data,
+        }
+      }
+      case 'CLEAR': {
+        return {
+          ...state,
+          msg: ''
         }
       }
       default: {

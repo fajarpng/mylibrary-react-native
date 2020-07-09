@@ -39,9 +39,7 @@ class Profile extends Component {
               />
             )}
             keyExtractor={item => item.genre}
-            // onRefresh={() => this.getData({page: currentPage})}
             refreshing={isLoading}
-            // onEndReached={this.nextPage}
             onEndReachedThreshold={0.5}
           />
         </View>

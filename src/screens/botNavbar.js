@@ -6,7 +6,6 @@ import Home from './home'
 import Trans from './transaction'
 import Profile from './profile'
 import Author from './admin/authors'
-import Genre from './admin/genre'
 
 const Tab = createBottomTabNavigator();
 
@@ -34,15 +33,6 @@ export default function MyTabs() {
          }} 
       	name="author"
       	component={Author} />
-      <Tab.Screen
-        options={{
-            title: 'Genre',
-            tabBarIcon: ({color, size}) => (
-              <Icon name="tag" solid color={color} size={size} />
-            ),
-         }} 
-        name="genre"
-        component={Genre} />
       <Tab.Screen
       	options={{
             title: 'Transaction',

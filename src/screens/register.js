@@ -1,19 +1,47 @@
 import React, {Component} from 'react'
+import { connect } from 'react-redux'
 import {
     StyleSheet,
     View,
     TextInput,
     Dimensions,
+    Alert,
     Text,
     Image,
     TouchableOpacity
   } from 'react-native';
 
+import { register, clear } from '../redux/actions/auth'
 import logo from '../assets/logo-b.png'
 
 const deviceWidth = Dimensions.get('window').width;
 
-export default class Register extends Component {
+class Register extends Component {
+  constructor(props){
+        super(props)
+        this.state = {
+            name: '',
+            email: '',
+            password:'',
+            id_role: 2
+        }
+  }
+  register = () => {
+    this.props.register(this.state)
+  }
+  componentDidUpdate(){
+    const {msg, isError} = this.props.auth
+    if(msg !== ''){
+      if(isError){
+        Alert.alert(msg)
+      }
+      else {
+        Alert.alert(msg)
+        this.props.navigation.navigate('login')
+      }
+    this.props.clear()
+    }
+  }
   render (){
     return (
         <View style={styles.parent}>
@@ -21,14 +49,25 @@ export default class Register extends Component {
             <Text style={styles.title}>Hi ! Create your account</Text>
             <View style={styles.btnWrapper}>
               <View style={styles.inputWraper}>
-                <TextInput placeholder='Username' style={styles.input}/>
-                <TextInput placeholder='Email' style={styles.input}/>
+                <TextInput
+                  placeholder='Username'
+                  onChangeText = {(e) => this.setState({name: e})}
+                  style={styles.input}/>
+                <TextInput
+                  placeholder='Email'
+                  onChangeText = {(e) => this.setState({email: e})}
+                  style={styles.input}/>
                 <TextInput
                   placeholder='Password'
+                  onChangeText = {(e) => this.setState({password: e})}
                   secureTextEntry={true}
                   style={styles.input} />
               </View>
-                <TouchableOpacity style={styles.btn}><Text style={styles.text}>REGISTER</Text></TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this.register}
+                  style={styles.btn}>
+                  <Text style={styles.text}>REGISTER</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.linkWraper}>
               <Text >Have an account ?</Text>
@@ -38,7 +77,12 @@ export default class Register extends Component {
     )
   }
 }
+const mapStateToProps = state => ({
+    auth: state.auth,
+})
+const mapDispatchToProps = { register, clear }
 
+export default connect(mapStateToProps, mapDispatchToProps)(Register)
 const styles = StyleSheet.create({
   parent: {
     flex: 1,
