@@ -7,8 +7,10 @@ import {
     StyleSheet,
     View,
     TextInput,
+    ScrollView,
     Dimensions,
     Alert,
+    ActivityIndicator,
     Text,
     Image,
     TouchableOpacity
@@ -28,41 +30,59 @@ class Login extends Component {
   }
 
   login = () => {
-    this.props.login(this.state)
+    const {email, password} = this.state
+    if (email !== '' && password !== '') {
+      this.props.login(this.state)
+    } else { 
+      Alert.alert("Please, all form must be filled !")
+    }
   }
   componentDidUpdate(){
       const {msg, isError} = this.props.auth
       if(msg !== ''){
           if(isError){
-               Alert.alert("Failed")
+            console.log(msg)
+            Alert.alert('Incorect email or password')
           } else {
-               Alert.alert("Success")
+            Alert.alert(msg)
           }
       this.props.clear()
       }
   }
   render (){
+    const {isLoading} = this.props.auth
     return (
         <View style={styles.parent}>
-            <Image source={logo} style={styles.image}/>
-            <Text style={styles.title}>Hi ! Log in to your account</Text>
-            <View style={styles.btnWrapper}>
-              <View style={styles.inputWraper}>
-                <TextInput
-                  placeholder='Email'
-                  style={styles.input} onChangeText={(e) => this.setState({email: e})}/>
-                <TextInput
-                  placeholder='Password'
-                  secureTextEntry={true}
-                  style={styles.input} onChangeText={(e) => this.setState({password: e})}/>
-              </View>
-                <TouchableOpacity style={styles.btn} onPress={this.login} ><Text style={styles.text}>LOGIN</Text></TouchableOpacity>
-            </View>
-            <View style={styles.linkWraper}>
-              <Text >Don t have an account ?</Text>
-              <Text style={styles.title} onPress={() => this.props.navigation.navigate('register')}> Register now</Text>
-            </View>
-    </View>
+          <Image source={logo} style={styles.image}/>
+          <Text style={styles.title}>Hi ! Log in to your account</Text>
+          <View style={styles.btnWrapper}>
+            <View style={styles.inputWraper}>
+              <TextInput
+                placeholder='Email'
+                style={styles.input} onChangeText={(e) => this.setState({email: e})}/>
+              <TextInput
+              placeholder='Password'
+              secureTextEntry={true}
+              style={styles.input} onChangeText={(e) => this.setState({password: e})}/>
+          </View>
+          {isLoading ? (
+              <TouchableOpacity style={styles.btnLoading} onPress={this.login} >
+                <Text style={styles.text}>Loading </Text>
+                <ActivityIndicator size={15} color="#fff" />
+                <ActivityIndicator size={15} color="#fff" />
+                <ActivityIndicator size={15} color="#fff" />
+              </TouchableOpacity>
+            ):(
+              <TouchableOpacity style={styles.btn} onPress={this.login} >
+                <Text style={styles.text}>LOGIN</Text>
+              </TouchableOpacity>
+            )} 
+        </View>
+        <View style={styles.linkWraper}>
+          <Text >Don t have an account ?</Text>
+          <Text style={styles.title} onPress={() => this.props.navigation.navigate('register')}> Register now</Text>
+        </View>
+      </View>
     )
   }
 }
@@ -90,6 +110,15 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     alignItems: 'center',
     paddingBottom: 50
+  },
+  btnLoading: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(12, 186, 177, 0.7)',
+    width: 250,
+    borderRadius: 15,
+    padding: 5
   },
   btn: {
     elevation: 5,

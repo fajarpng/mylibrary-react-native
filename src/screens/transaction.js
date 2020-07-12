@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import {
     StyleSheet,
     View,
-    ScrollView,
-    TextInput,
+    ActivityIndicator,
     Dimensions,
+    Modal,
     Alert,
     FlatList,
     Text,
@@ -18,9 +18,17 @@ import {
 import {deleteTrans, clear} from '../redux/actions/actionData'
 import {fetchTrans, fetchBook} from '../redux/actions/fetchData'
 
+const REACT_APP_URL = 'http://192.168.43.133:1000/'
 const deviceWidth = Dimensions.get('window').width;
 
 class Trans extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      modalVisible: false,
+      id: ''
+    }
+  }
   componentDidMount(){
     this.props.fetchTrans()
   }
@@ -33,6 +41,7 @@ class Trans extends Component {
             Alert.alert(msg)
           } else {
             Alert.alert(msg)
+            this.setState({modalVisible: false})
             this.props.fetchTrans()
             this.props.fetchBook(param)
           }
@@ -43,8 +52,10 @@ class Trans extends Component {
     this.props.deleteTrans(id,this.props.auth.token)
   }
   render (){
-    const { name } = this.props.auth
+    const { name} = this.props.auth
     const { trans, isLoading} = this.props.fetchData
+    const { isLoad } = this.props.actionData
+    
     const data = trans.filter(val => { return val.name === name})
 
     return (
@@ -57,13 +68,15 @@ class Trans extends Component {
               renderItem={({item}) => (
                 <View style={styles.itemWrapper}>
                   <View style={styles.imgWrapper}>
-                    <Image source={{uri: item.image}} style={styles.image}/>
+                    <Image source={{uri: `${REACT_APP_URL}img/${item.image}`}} style={styles.image}/>
                   </View>
                   <View style={styles.detail}>
                     <Text style={styles.title}>{item.title}</Text>
                     <Text style={styles.date}>Borrowed by {item.name}</Text>
                   </View>
-                  <TouchableOpacity style={styles.btnReturn} onPress={() => this.returnBook(item.id)}>
+                  <TouchableOpacity
+                    style={styles.btnReturn}
+                    onPress={() => this.setState({modalVisible: true, id: item.id})}>
                     <Icon name='undo-alt' color='red' size={20}/>
                     <Text style={styles.return}>Return</Text>
                   </TouchableOpacity>
@@ -73,6 +86,40 @@ class Trans extends Component {
               refreshing={isLoading}
               onEndReachedThreshold={0.5}
             />
+            <Modal
+            animationType="slide"
+            transparent={true}
+            visible={this.state.modalVisible}
+            >
+              <View style={styles.modalParent}>
+                <View style={styles.modalWraper}>
+                  <TouchableOpacity
+                  style={{alignSelf:'flex-end', padding: 10}}
+                  onPress={() => {
+                    this.setState({modalVisible: false});
+                  }}
+                  >
+                    <Icon name='times' size={20} style={{alignSelf:'flex-end'}}/>
+                  </TouchableOpacity>
+                  <Text style={styles.modalTitle}>Are you sure ?</Text>
+                  {isLoad ? (
+                    <View style={styles.modalBtn}>
+                      <ActivityIndicator size={25} color="#fff" />
+                      <ActivityIndicator size={25} color="#fff" />
+                      <ActivityIndicator size={25} color="#fff" />
+                    </View>
+                    ):(
+                    <TouchableOpacity
+                    style={styles.modalBtn}
+                    onPress={() => this.returnBook(this.state.id)}
+                    >
+                      <Text style={styles.modalBtnText}>Return now</Text>
+                    </TouchableOpacity>
+                    )
+                  }
+                </View>
+              </View>
+            </Modal>
         </LinearGradient>
     )
   }
@@ -90,6 +137,37 @@ const styles = StyleSheet.create({
   parent: {
     flex: 1,
     position: 'relative',
+  },
+  modalParent: {
+    flex: 1,
+    width: deviceWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)'
+  },
+  modalWraper: {
+    backgroundColor: '#fff',
+    width: deviceWidth - 50,
+    borderRadius: 10
+  },
+  modalTitle: {
+    fontSize: 25,
+    color: '#0CBABA',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginBottom: 20
+  },
+  modalBtn:{
+    backgroundColor: '#0CBABA',
+    justifyContent: 'center',
+    width: 'auto',
+    flexDirection: 'row',
+    padding: 10,
+  },
+  modalBtnText:{
+    color: '#fff',
+    fontSize: 20,
+    alignSelf: 'center'
   },
   topWrapper: {
     width: deviceWidth,
@@ -135,7 +213,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   date: {
-    color: '#74b9ff'
+    color: '#0CBABA'
   },
   btnReturn:{
     alignItems: 'center',

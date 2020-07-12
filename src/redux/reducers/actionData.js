@@ -1,5 +1,6 @@
 const initialState = {
     isError: false,
+    isLoad: false,
     msg: '',
     token: null
   }
@@ -15,7 +16,8 @@ const initialState = {
       case 'BOOK_PENDING': {
         return {
           ...state,
-          isError: false
+          isError: false,
+          isLoad: true
         }
       }
       case 'BOOK_REJECTED': {
@@ -23,13 +25,15 @@ const initialState = {
           ...state,
           isError: true,
           msg: action.payload.response.data.msg,
+          isLoad: false
         }
       }
       case 'BOOK_FULFILLED': {
         return {
           ...state,
           isError: false,
-          msg: action.payload.data.msg
+          msg: action.payload.data.msg,
+          isLoad: false
         }
       }
       default: {

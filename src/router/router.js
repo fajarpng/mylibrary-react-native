@@ -13,14 +13,11 @@ import Tab from '../screens/botNavbar'
 
 class Route extends Component {
   render() {
-  	let isLogin
-  	if(this.props.auth.token !== null){
-  		isLogin = true
-  	}else{isLogin = false}
+  	const {token} = this.props.auth
     return (
     	<NavigationContainer>
 	        <Stack.Navigator>
-		    	{!isLogin ? ( 
+		    	{token === null ? ( 
 		    		<>
 		        	<Stack.Screen options={{headerShown: false}} component={Landing} name={'landing'}/>
 		        	<Stack.Screen 

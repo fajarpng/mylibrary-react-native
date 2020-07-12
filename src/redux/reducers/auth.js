@@ -1,8 +1,10 @@
 const initialState = {
     isError: false,
     msg: '',
+    image: null,
     token: null,
     name: '',
+    isLoading: false,
     email: '',
     id:'',
     role: ''
@@ -19,6 +21,7 @@ const initialState = {
       case 'LOGIN_PENDING': {
         return {
           ...state,
+          isLoading: true,
           isError: false
         }
       }
@@ -26,30 +29,36 @@ const initialState = {
         return {
           ...state,
           isError: true,
+          isLoading: false,
           msg: action.payload.response.data.msg,
         }
       }
       case 'LOGIN_FULFILLED': {
+        const {msg, token, image, name, id, role, email} = action.payload.data
         return {
           ...state,
+          isLoading: false,
           isError: false,
-          msg: action.payload.data.msg,
-          token: action.payload.data.token,
-          name: action.payload.data.name,
-          email: action.payload.data.email,
-          id: action.payload.data.id,
-          role: action.payload.data.role
+          image, 
+          msg,
+          token,
+          name,
+          email,
+          id,
+          role,
         }
       }
       case 'REGISTER_PENDING': {
         return {
           ...state,
-          isError: false
+          isLoading: true,
+          isError: false,
         }
       }
       case 'REGISTER_REJECTED': {
         return {
           ...state,
+          isLoading: false,
           isError: true,
           msg: action.payload.response.data.msg,
         }
@@ -57,8 +66,37 @@ const initialState = {
       case 'REGISTER_FULFILLED': {
         return {
           ...state,
+          isLoading: false,
           isError: false,
           msg: action.payload.data.msg,
+        }
+      }
+      case 'UPLOAD_PENDING': {
+        return {
+          ...state,
+          isLoading: true,
+          isError: false,
+        }
+      }
+      case 'UPLOAD_REJECTED': {
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+          msg: action.payload.response.data.msg,
+        }
+      }
+      case 'UPLOAD_FULFILLED': {
+        const {msg} = action.payload.data
+        const {image, name, email} = action.payload.data.data
+        return {
+          ...state,
+          isLoading: false,
+          isError: false,
+          msg,
+          image,
+          name,
+          email
         }
       }
       case 'LOGOUT': {
@@ -66,6 +104,7 @@ const initialState = {
           ...state,
           isError: false,
           msg: '',
+          image: null,
           token: null,
           name: '',
           email: '',

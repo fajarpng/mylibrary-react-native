@@ -18,6 +18,7 @@ import {
 import {fetchBook, fetchGenre, clear} from '../redux/actions/fetchData'
 
 const deviceWidth = Dimensions.get('window').width;
+const REACT_APP_URL = 'http://192.168.43.133:1000/'
 
 class Home extends Component {
   constructor(props) {
@@ -30,62 +31,70 @@ class Home extends Component {
     };
   }
   componentDidMount() {
-    this.getData(this.state.genre);
+    const {currentPage, search, genre} = this.state
+
+    this.props.fetchGenre()
+    this.getData(currentPage, search, genre);
   }
-  getData = (genre) => {
-    const {currentPage, search, data} = this.state
-    const param = `?page=${currentPage}&search=${search}&id_genre=${genre}`
+  getData = (page, search, genre) => {
+    const param = `?page=${page}&search=${search}&id_genre=${genre}`
 
     this.props.fetchBook(param)
   }
-  componentDidUpdate(){
-    const {isLoading, books, msg} = this.props.fetchData
-    if(msg === 'FULFILED'){
-      if (isLoading) {
-        console.log(msg)
-      } else {
-        this.setData()
-      }
-      this.props.clear()
-    }
-    ;
-  }
-  setData = () => {
-    const { books } = this.props.fetchData
-    const {currentPage, search} = this.state
+  // componentDidUpdate(){
+  //   const {isLoading, books, msg} = this.props.fetchData
+  //   if(msg === 'FULFILED'){
+  //     if (isLoading) {
+  //       console.log(msg)
+  //     } else {
+  //       this.setData()
+  //     }
+  //     this.props.clear()
+  //   }
+  // }
+  // setData = () => {
+  //   const { books } = this.props.fetchData
+  //   const {currentPage, search} = this.state
 
-    if (currentPage > 1) {
-      console.log('NEXT PAGE')
-      console.log(books)
-      this.setState({data: [...this.state.data, ...books]})
-    } else {
-      console.log('FRIST PAGE')
-      console.log(books)
-      this.setState({data: [...books]})
-    }
-  }
+  //   if (currentPage > 1) {
+  //     console.log('NEXT PAGE')
+  //     console.log(books)
+  //     this.setState({data: [...this.state.data, ...books]})
+  //   } else {
+  //     console.log('FRIST PAGE')
+  //     console.log(books)
+  //     this.setState({data: [...books]})
+  //   }
+  // }
   onRefresh = () => {
     this.setState({currentPage: 1, data: [], search: '', genre:''}),
-    this.props.fetchBook('?page=1')
+    this.getData(1,'','')
+  }
+  searchByGenre = (id) => {
+    const {search, genre} = this.state
+    this.setState({currentPage: 1, data: []}, () => {
+      this.getData(1, '', id)
+    })
   }
   search = () => {
+    const {search, genre} = this.state
     this.setState({currentPage: 1, data: []}, () => {
-      this.getData('')
+      this.getData(1,search, genre)
     })
   }
   nextPage = () => {
     const {pageInfo} = this.props.fetchData
-    const {currentPage, genre} =this.state
-    console.log('AAAAAA NEXT PAGE AAAAAAAAA')
+    const {currentPage, search, genre} =this.state
     if ( pageInfo.nextLink !== null) {
-      if( (genre !== '') && ((currentPage + 1) !== pageInfo.totalPage)){
-        this.setState({currentPage: currentPage + 1}, () => {
-          this.getData(genre)
-        })
+      if( genre !== '' && search === ''){
+        if ((currentPage + 1) !== pageInfo.totalPage){
+          this.setState({currentPage: currentPage + 1}, () => {
+            this.getData(currentPage+1, search, genre)
+          })
+        } else { console.log(currentPage + 1, pageInfo.totalPage)}
       } else {
-        this.setState({currentPage: currentPage + 1}, () => {
-          this.getData(genre)
-        })
+        this.setState({currentPage: currentPage + 1})
+        this.getData(currentPage+1, search, genre)
       }
     }
   }
@@ -103,8 +112,8 @@ class Home extends Component {
                 value={this.state.search}
                 style={styles.input}
                 onChangeText={(e) => this.setState({search: e})}/>
-                <TouchableOpacity>
-                  <Icon name='search' color='#380036' size={20} onPress={()=>this.search()}/>
+                <TouchableOpacity style={styles.searchBtn} onPress={()=>this.search()}>
+                  <Icon name='search' color='#380036' size={20}/>
                 </TouchableOpacity>
             </View>
           </View>
@@ -117,13 +126,13 @@ class Home extends Component {
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.btnGenre}
-                  onPress={() => this.setState({genre: item.id},this.getData(item.id))}>
+                  onPress={() => this.searchByGenre(item.id)}>
                   <Text style={styles.textGenre}>{item.genre}</Text>
                 </TouchableOpacity>
               )}
               keyExtractor={item => item.genre}
               refreshing={isLoading}
-              onEndReachedThreshold={0.2}
+              onEndReachedThreshold={0.1}
             />
           </View>
           <FlatList
@@ -133,7 +142,7 @@ class Home extends Component {
               <View style={styles.bookWrapper}>
               <TouchableOpacity style={styles.imgWrapper} 
                 onPress={() => this.props.navigation.navigate('detail',{item})}>
-                <Image source={{uri : item.image}} style={styles.image}/>
+                <Image source={{uri : `${REACT_APP_URL}img/${item.image}`}} style={styles.image}/>
               </TouchableOpacity>
               <Text style={styles.titleText}> {item.title} </Text>
               </View>
@@ -142,7 +151,7 @@ class Home extends Component {
             keyExtractor={item => item.id.toString()}
             onRefresh={this.onRefresh}
             refreshing={isLoading}
-            onEndReached={this.nextPage}
+            // onEndReached={this.nextPage}
             onEndReachedThreshold={0.2}
           />
       </LinearGradient>
@@ -187,8 +196,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   input: {
-    width: deviceWidth - 100,
+    width: deviceWidth - 105,
     alignSelf: 'center',
+    padding: 10
+  },
+  searchBtn: {
     padding: 10
   },
   listText: {

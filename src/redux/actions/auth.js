@@ -15,6 +15,13 @@ export const register = (data)=>{
     payload: axios().post(url, data)
   }
 }
+export const uploadImage = (id, data) =>{
+    const url = `${REACT_APP_URL}users/photo/${id}`
+  return{
+    type: 'UPLOAD',
+    payload: axios().patch(url, data)
+  }
+}
 export const logout = () => {
   return {
     type: 'LOGOUT'

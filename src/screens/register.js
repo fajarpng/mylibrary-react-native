@@ -4,6 +4,7 @@ import {
     StyleSheet,
     View,
     TextInput,
+    ActivityIndicator,
     Dimensions,
     Alert,
     Text,
@@ -27,7 +28,12 @@ class Register extends Component {
         }
   }
   register = () => {
-    this.props.register(this.state)
+    const {email, password, name} = this.state
+    if (email !== '' && password !== '' && name !== '') {
+      this.props.register(this.state)
+    } else { 
+      Alert.alert("Please, all form must be filled !")
+    }
   }
   componentDidUpdate(){
     const {msg, isError} = this.props.auth
@@ -43,37 +49,47 @@ class Register extends Component {
     }
   }
   render (){
+    const {isLoading} = this.props.auth
     return (
         <View style={styles.parent}>
         	<Image source={logo} style={styles.image}/>
-            <Text style={styles.title}>Hi ! Create your account</Text>
-            <View style={styles.btnWrapper}>
-              <View style={styles.inputWraper}>
-                <TextInput
-                  placeholder='Username'
-                  onChangeText = {(e) => this.setState({name: e})}
-                  style={styles.input}/>
-                <TextInput
-                  placeholder='Email'
-                  onChangeText = {(e) => this.setState({email: e})}
-                  style={styles.input}/>
-                <TextInput
-                  placeholder='Password'
-                  onChangeText = {(e) => this.setState({password: e})}
-                  secureTextEntry={true}
-                  style={styles.input} />
-              </View>
-                <TouchableOpacity
-                  onPress={this.register}
-                  style={styles.btn}>
-                  <Text style={styles.text}>REGISTER</Text>
-                </TouchableOpacity>
+          <Text style={styles.title}>Hi ! Create your account</Text>
+          <View style={styles.btnWrapper}>
+            <View style={styles.inputWraper}>
+              <TextInput
+                placeholder='Username'
+                onChangeText = {(e) => this.setState({name: e})}
+                style={styles.input}/>
+              <TextInput
+                placeholder='Email'
+                onChangeText = {(e) => this.setState({email: e})}
+                style={styles.input}/>
+              <TextInput
+                placeholder='Password'
+                onChangeText = {(e) => this.setState({password: e})}
+                secureTextEntry={true}
+                style={styles.input} />
             </View>
-            <View style={styles.linkWraper}>
-              <Text >Have an account ?</Text>
-              <Text style={styles.title} onPress={() => this.props.navigation.navigate('login')}> Login now</Text>
-            </View>
-    </View>
+          {isLoading ? (
+            <TouchableOpacity style={styles.btnLoading} onPress={this.register} >
+              <Text style={styles.text}>Loading </Text>
+              <ActivityIndicator size={15} color="#fff" />
+              <ActivityIndicator size={15} color="#fff" />
+              <ActivityIndicator size={15} color="#fff" />
+            </TouchableOpacity>
+            ):(
+            <TouchableOpacity
+              onPress={this.register}
+              style={styles.btn}>
+              <Text style={styles.text}>REGISTER</Text>
+            </TouchableOpacity>
+            )} 
+        </View>
+        <View style={styles.linkWraper}>
+          <Text >Have an account ?</Text>
+          <Text style={styles.title} onPress={() => this.props.navigation.navigate('login')}> Login now</Text>
+        </View>
+      </View>
     )
   }
 }
@@ -101,6 +117,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 50
   },
+  btnLoading: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(12, 186, 177, 0.7)',
+    width: 250,
+    borderRadius: 15,
+    padding: 5
+  },
   btn: {
     shadowColor: "#000",
     shadowOpacity: 0.5,
@@ -109,6 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#0CBABA',
     width: 250,
+    height: 40,
     borderRadius: 15,
     padding: 5
   },
