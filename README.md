@@ -27,3 +27,7 @@ yarn install or npm install
 ```
 npx react-native run-android
 ```
+
+## Download the App
+
+## Screenshot from the App
